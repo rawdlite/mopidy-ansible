@@ -1,0 +1,5 @@
+---
+# defaults file for docker
+
+# List of users to add to docker group
+docker_group_users: []

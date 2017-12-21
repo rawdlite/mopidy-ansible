@@ -1,0 +1,24 @@
+---
+# tasks file for utils
+- name: Install the package "ncmpcpp"
+  become: yes
+  apt:
+    name: ncmpcpp
+    state: present
+
+- name: Install Extras
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ extra_utils }}"
+
+
+- name: Create alias functions
+  lineinfile:
+    path: ~/.bashrc
+    line: "{{ item }}"
+    state: present
+  with_items: "{{ alias_functions }}"
+
+#git autoconf automake libtool intltool autopoint

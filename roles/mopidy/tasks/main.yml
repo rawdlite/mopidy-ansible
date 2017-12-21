@@ -1,0 +1,25 @@
+---
+- name: create dev dir
+  file:
+    path: ~/.config/mopidy
+    state: directory
+    mode: 0755
+
+- name: Write Config
+  template:
+    src: mopidy_conf.j2
+    dest: ~/.config/mopidy/mopidy.conf
+
+# docker run -d  --name mopidy --net host --device /dev/snd -v ~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf -v /data/music:/data/music rawdlite/mopidy_armhf
+- name: start mopidy docker
+  docker_container:
+    name: mopidy
+    network_mode: host
+    devices:
+      - /dev/snd:/dev/snd
+    image: rawdlite/mopidy_armhf
+    volumes:
+      - ~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf
+      - '{{ media_dir }}:/data/music'
+    restart_policy: unless-stopped
+    state: started

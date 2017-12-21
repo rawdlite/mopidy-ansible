@@ -1,0 +1,76 @@
+---
+# tasks file for mopidy-development
+- name: create dev dir
+  file:
+    path: /home/tom/projects/audio/mopidy_proj
+    state: directory
+    owner: tom
+    mode: 0755
+
+- name: checkout docker-mopidy
+  git:
+    repo: 'https://github.com/rawdlite/docker-mopidy.git'
+    dest: /home/tom/projects/audio/mopidy_proj/docker-mopidy
+    version: develop
+
+- name: create conf dir
+  file:
+    path: ~/.config/mopidy
+    state: directory
+    owner: tom
+    mode: 0755
+
+- name: Write Config
+  template:
+    src: mopidy_conf.j2
+    dest: ~/.config/mopidy/mopidy_dev.conf
+
+- name: Build Mopidy Dev
+  docker_image:
+    path: /home/tom/projects/audio/mopidy_proj/docker-mopidy
+    name: rawdlite/mopidy-dev
+    dockerfile: Dockerfile.armhf
+    state: present
+
+# docker run -d --name mopidy-dev --net host --device /dev/snd -v /home/tom/projects/audio/mopidy_proj:/root/src -v ~/.config/mopidy/mopidy_dev.conf:/root/.config/mopidy/mopidy.conf -v /data/music:/data/music rawdlite/mopidy-dev
+- name: start mopidy dev env
+  docker_container:
+    name: mopidy-dev
+    network_mode: host
+    devices:
+      - /dev/snd:/dev/snd
+    image: rawdlite/mopidy-dev
+    volumes:
+      - ~/.config/mopidy/mopidy_dev.conf:/root/.config/mopidy/mopidy.conf
+      - ~/.config/beets/config.yaml:/root/.config/beets/config.yaml
+      - '{{ media_dir }}:/data/music'
+      - /home/tom/projects/audio/mopidy_proj:/root/src
+    state: present
+
+- name: checkout bigbeet
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
+    dest: /home/tom/projects/audio/mopidy_proj/mopidy-bigbeet
+
+- name: checkout beetslocal
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-beets-local.git'
+    dest: /home/tom/projects/audio/mopidy_proj/mopidy-beetslocal
+
+#docker exec -it mopidy-dev pip install --editable /root/src/mopidy-beetslocal
+#docker exec -it mopidy-dev pip install --editable /root/src/mopidy-bigbeet
+- name: set ownership
+  file:
+    path: /home/tom
+    owner: tom
+    recurse: yes
+    mode: 0755
+    state: directory
+
+- name: register beetslocal
+  command: docker exec -it mopidy-dev pip install --editable /root/src/mopidy-beetslocal
+  register: beetslocal-dev
+
+- name: register bigbeet
+  command: docker exec -it mopidy-dev pip install --editable /root/src/mopidy-bigbeet
+  register: bigbeet-dev

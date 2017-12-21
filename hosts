@@ -1,0 +1,9 @@
+[local]
+127.0.0.1
+
+[rasputin]
+192.168.0.103 ansible_user=root
+
+[odroid]
+192.168.0.100 ansible_user=root
+

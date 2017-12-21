@@ -1,0 +1,60 @@
+---
+# tasks file for dev_env
+- user:
+    name: tom
+    comment: "nfs user"
+    uid: 501
+    shell: /bin/bash
+    group: users
+    groups: audio
+    state: present
+
+- user:
+    name: pi
+    remove: yes
+    state: absent
+
+- name: sudo for tom
+  lineinfile:
+    path: /etc/sudoers
+    line: 'tom   ALL=(ALL) NOPASSWD:ALL'
+    regexp: '^tom'
+    create: yes
+    state: present
+
+- name: create data dir
+  file:
+    path: /data/music
+    state: directory
+    mode: 0755
+
+- name: Mount up device EXT_MUSIC
+  mount:
+    path: /data/music
+    src: LABEL=EXT_MUSIC
+    fstype: vfat
+    state: present
+
+- name: Create NFS Export
+  become: yes
+  lineinfile:
+    path: /etc/exports
+    line: '/home/tom/projects *(rw,sync,no_subtree_check,all_squash)'
+    regexp: '^/home/tom/projects'
+    create: yes
+    state: present
+
+- name: Create Data NFS Export
+  become: yes
+  lineinfile:
+    path: /etc/exports
+    line: '/data/music *(rw,sync,no_subtree_check,all_squash)'
+    regexp: '^/data/music'
+    create: yes
+    state: present
+
+- name: Install the package "nfs server"
+  become: yes
+  apt:
+    name: nfs-kernel-server
+    state: present

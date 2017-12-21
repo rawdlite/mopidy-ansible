@@ -1,0 +1,38 @@
+- hosts: odroid
+  pre_tasks:
+  - name: load snd modules
+    lineinfile:
+      path: /etc/exports
+      line: "{{ item }}"
+      create: yes
+      state: present
+    with_items: ['snd-soc-pcm5102', 'snd-soc-odroid-dac' ]
+  - name: Default Sound Device
+    copy:
+      src: roles/utils/files/asound.conf
+      dest: /etc/asound.conf
+
+  roles:
+    - role: utils
+      extra_utils:
+        - tmux
+        - mplayer
+        - nfs-kernel-server
+        - build-essential
+        - git
+        - python-pip
+        - alsa-base
+        - alsa-utils
+        - vim
+
+    - role: docker
+      docker_group_users:
+        - odroid
+
+    - role: mopidy
+      media_dir: /data/music
+      spotify_user: *******
+      spotify_passwd: ******
+      beetslibrary: /data/music/beetslibrary.blb
+      audio_output: alsasink device=hw:1,0
+

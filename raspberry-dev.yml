@@ -1,0 +1,50 @@
+- hosts: rasputin
+  roles:
+    - role: utils
+      extra_utils:
+        - tmux
+        - mplayer
+        - nfs-kernel-server
+        - build-essential
+        #- portaudio19-dev
+        - git
+        #- autoconf
+        #- automake
+        #- libtool
+        #- intltool
+        #- autopoint
+        #- libasound2-dev
+        #- libpulse-dev
+        #- libmad0-dev
+        #- libwavpack-dev
+        #- libsndfile1-dev
+        #- libcdio-dev
+        #- libcddb2-dev
+        #- libtool
+        #- libsamplerate0-dev
+        #- libgtk2.0-dev
+        #- libavformat-dev
+        #- libcurl4-gnutls-dev
+        #- libdbus-1-dev
+        #- libfaad-dev
+        #- libimlib2-dev
+        #- libzip-dev
+        - python-pip
+    - role: dev_env
+    - role: docker
+      docker_group_users:
+        - tom
+    - role: mopidy-development
+      media_dir: /data/music
+      spotify_user: ********
+      spotify_passwd: ********
+      beetslibrary: /data/music/beetslibrary.blb
+      audio_output: alsasink device=hw:1,0
+### cirrus soundcard
+# sudo rpi-update
+# echo "dtoverlay=rpi-cirrus-wm5102" >> /boot/config.txt
+# echo "softdep arizona-spi pre: arizona-ldo1" >  /etc/modprobe.d/cirrus.conf
+# wget http://www.horus.com/~hias/tmp/cirrus/cirrus-ng-scripts.tgz
+# mkdir bin
+# cd bin
+# tar zxf ../cirrus-ng-scripts.tgz

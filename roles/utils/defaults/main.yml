@@ -1,0 +1,7 @@
+---
+# defaults file for utils
+extra_utils: []
+alias_functions:
+  - d-enter() { docker exec -it "$1" /bin/bash; }
+  - d-log() { docker logs "$1"; }
+  - alias dmop="docker exec -it mopidy-dev" 

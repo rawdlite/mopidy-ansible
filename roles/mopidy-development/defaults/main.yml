@@ -1,0 +1,8 @@
+---
+# defaults file for mopidy-development
+media_dir: /data/music
+spotify_user: False
+spotify_passwd: False
+beetslibrary: ~/.config/mopidy/beetslibrary.blb
+audio_output: autoaudiosink
+audio_mixer: software
