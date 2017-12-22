@@ -3,6 +3,8 @@
 media_dir: /media
 spotify_user: False
 spotify_passwd: False
+spotify_client_id: False
+spotify_client_secret: False
 beetslibrary: ~/.config/mopidy/beetslibrary.blb
 audio_output: autoaudiosink
 audio_mixer: software

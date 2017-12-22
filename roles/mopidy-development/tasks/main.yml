@@ -7,11 +7,11 @@
     owner: tom
     mode: 0755
 
-- name: checkout docker-mopidy
-  git:
-    repo: 'https://github.com/rawdlite/docker-mopidy.git'
-    dest: /home/tom/projects/audio/mopidy_proj/docker-mopidy
-    version: develop
+#- name: checkout docker-mopidy
+#  git:
+#    repo: 'https://github.com/rawdlite/docker-mopidy.git'
+#    dest: /home/tom/projects/audio/mopidy_proj/docker-mopidy
+#    version: develop
 
 - name: create conf dir
   file:
