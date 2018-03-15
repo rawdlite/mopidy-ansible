@@ -1,0 +1,62 @@
+library: /data/music/beetslibrary.blb
+directory: /data/music/music_data/beets
+import:
+    write: yes
+    move: yes
+    resume: no
+    languages: en
+    log: beetslog.txt
+pluginpath:
+        - /root/src/mopidy-bigbeet/beetsplug
+        - /usr/local/lib/python2.7/dist-packages/beetsplug
+plugins:
+    - info
+#    - lastgenre
+    - rewrite
+    - duplicates
+    - bigbeet
+    - copyartifacts
+    - the
+
+the:
+    strip: yes
+
+edit:
+    itemfields: track title artist album grouping
+    albumfields: album albumartist
+
+asciify_paths: yes
+replace:
+    '[\\/]': _
+    '^\.': _
+    '[\x00-\x1f]': _
+    '[<>:"\?!;\*\|]': _
+    '\.$': _
+    '\s+$': ''
+    '^\s+': ''
+    '[\[\(]': '-'
+    '[\]\)]': ''
+    '&': '-'
+    ' ': _
+    ',': ''
+    "'": ''
+format_item: "$artist - $album - $title \ncomp: $comp =$grouping - $genre album_id: $mb_albumid\n-> $path"
+format_album: "$albumartist - $album \n$genre comp: $comp albumtype: $albumtype mid: $mb_albumid $id \n-> $path"
+
+lastgenre:
+    auto: no
+    canonical: /data/music/music_var/bigbeet/genres-tree.yaml
+    whitelist: /data/music/music_var/bigbeet//genres.txt
+    force: no
+    source: artist
+paths:
+   default: %upper{%left{%if{$albumartist_sort,$albumartist_sort,$albumartist},1}}/%if{$albumartist_sort,$albumartist_sort,$albumartist}/%if{$original_year,${original_year}__}$album/%if{$disc,${disc}-}${track}_-_${artist}_-_${album}_-_$title
+   singleton: 00_Singleton/%if{$grouping,_$grouping/,%if{$genre,_$genre/}i}$artist/$title
+   comp: 00_COMPILATIONS/_$grouping/$album%aunique{}/%if{$disc,${disc}-}${track}_-_%if{$artist,${artist}_-_}$title
+
+rewrite:
+   artist .*Anna .*Netrebko.*: Anna Netrebko
+   albumartist_sort .*Netrebko.*Anna.*: Netrebko Anna
+   albumartist_sort Pergolesi, Giovanni Battista: Netrebko Anna
+   albumartist_sort Shostakovich.*Dmitri.*: Shostakovich Dmitri
+   albumartist_sort Villazon_Rolando_Munchner_Rundfunkorchester_Viotti_Marcello: Vilazon Rolando
