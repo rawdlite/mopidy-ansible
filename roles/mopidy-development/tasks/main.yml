@@ -32,7 +32,8 @@
     dockerfile: Dockerfile.armhf
     state: present
 
-# docker run -d --name mopidy-dev --net host --device /dev/snd -v /home/tom/projects/audio/mopidy_proj:/root/src -v ~/.config/mopidy/mopidy_dev.conf:/root/.config/mopidy/mopidy.conf -v /data/music:/data/music rawdlite/mopidy-dev
+# docker run -d --name mopidy --net host --device /dev/snd -v /home/tom/projects/audio/mopidy_proj:/root/src -v ~/.config:/root/.config -v /data/music:/data/music rawdlite/mopidy-dev
+# docker run -d --name mopidy-dev --net host --device /dev/snd -v /home/tom/projects/audio/mopidy_proj:/root/src -v ~/.config:/root/.config -v /data/music:/data/music rawdlite/mopidy-dev /usr/local/bin/mopidy --save-debug-log
 - name: start mopidy dev env
   docker_container:
     name: mopidy-dev
@@ -68,7 +69,7 @@
     state: directory
 
 - name: register beetslocal
-  command: docker exec -it mopidy-dev pip install --editable /root/src/mopidy-beetslocal
+  command: docker exec -it mopidy-dev pip install --editable /root/src/mopidy-beets-local
   register: beetslocal-dev
 
 - name: register bigbeet

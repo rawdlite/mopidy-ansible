@@ -22,6 +22,23 @@
     create: yes
     state: present
 
+- name: create ssh dir
+  file:
+    path: /home/tom/.ssh
+    state: directory
+    owner: tom
+    group: users
+    mode: 0700
+
+- name: create ssh authorization
+  copy:
+    src: ~/.ssh/id_rsa.pub
+    dest: /home/tom/.ssh/authorized_keys
+    owner: tom
+    group: users
+    mode: 0700
+
+
 - name: create data dir
   file:
     path: /data/music
@@ -35,26 +52,18 @@
     fstype: vfat
     state: present
 
-- name: Create NFS Export
-  become: yes
-  lineinfile:
-    path: /etc/exports
-    line: '/home/tom/projects *(rw,sync,no_subtree_check,all_squash)'
-    regexp: '^/home/tom/projects'
-    create: yes
-    state: present
-
-- name: Create Data NFS Export
-  become: yes
-  lineinfile:
-    path: /etc/exports
-    line: '/data/music *(rw,sync,no_subtree_check,all_squash)'
-    regexp: '^/data/music'
-    create: yes
-    state: present
-
-- name: Install the package "nfs server"
+- name: Install Dev Packages
   become: yes
   apt:
-    name: nfs-kernel-server
+    name: "{{ item }}"
     state: present
+  with_items: "{{ dev_tools }}"
+
+- name: Write SMB Conf
+  template:
+    src: smb_conf.j2
+    dest: /etc/samba/smb.conf
+
+- name: set smb_passwd
+  command: (echo {{ smb_passwd }}; echo {{ smb_passwd }}) |  smbpasswd -s -a tom
+  register: smb_passwd

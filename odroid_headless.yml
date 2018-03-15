@@ -63,4 +63,4 @@
           3131313537396237663966303632363765336236616362663438
       beetslibrary: /data/music/beetslibrary.blb
       audio_output: alsasink device=hw:1,0
-
+      audio_mixer: alsamixer

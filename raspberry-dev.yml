@@ -1,7 +1,14 @@
 - hosts: rasputin
   roles:
-    - role: utils
     - role: dev_env
+    - role: utils
+      smb_passwd: !vault |
+          $ANSIBLE_VAULT;1.1;AES256
+          33373564326661306236386565396461383139343532653864356661306533643562636663643938
+          6534383031633836313764313935343434663664643730310a663935636639346632336237393863
+          38633263306136306639326662616638666566653533663562613062303064303638316330303834
+          6164333732646466640a343962636561393761396636643139393530346164356137656434393966
+          6234
     - role: docker
       docker_group_users:
         - tom
@@ -38,8 +45,8 @@
           30663735633833313133636136303939633934363761616339303939373161373736306565656665
           3131313537396237663966303632363765336236616362663438
       beetslibrary: /data/music/beetslibrary.blb
-      audio_output: alsasink device=hw:0,0
-      alsa_sink: alsamixer
+      bb_data_dir: /data/music/music_var/bigbeet/
+      audio_output: alsasink device=hw:1,0
 ### cirrus soundcard
 # sudo rpi-update
 # echo "dtoverlay=rpi-cirrus-wm5102" >> /boot/config.txt

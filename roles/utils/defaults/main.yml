@@ -3,34 +3,11 @@
 extra_utils:
   - tmux
   #- mplayer
-  - nfs-kernel-server
-  - build-essential
-        #- portaudio19-dev
-  - git
-        #- autoconf
-        #- automake
-        #- libtool
-        #- intltool
-        #- autopoint
-        #- libasound2-dev
-        #- libpulse-dev
-        #- libmad0-dev
-        #- libwavpack-dev
-        #- libsndfile1-dev
-        #- libcdio-dev
-        #- libcddb2-dev
-        #- libtool
-        #- libsamplerate0-dev
-        #- libgtk2.0-dev
-        #- libavformat-dev
-        #- libcurl4-gnutls-dev
-        #- libdbus-1-dev
-        #- libfaad-dev
-        #- libimlib2-dev
-        #- libzip-dev
   - python-pip
   - ncmpcpp
+  - mpc
 alias_functions:
   - d-enter() { docker exec -it "$1" /bin/bash; }
   - d-log() { docker logs "$1"; }
   - alias dmop="docker exec -it mopidy-dev"
+  - alias dlog="docker logs --tail=500 mopidy"
