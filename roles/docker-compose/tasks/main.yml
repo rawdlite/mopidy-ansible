@@ -1,0 +1,128 @@
+---
+# tasks file for docker
+- name: Test if docker is installed
+  command: docker
+  register: result
+  ignore_errors: True
+
+- name: Download docker install script
+  get_url:
+    url: https://get.docker.com
+    dest: /tmp/docker-install.sh
+    mode: "a+x"
+  when: result|failed
+
+
+- name: Run install script
+  shell: /bin/sh /tmp/docker-install.sh
+  when: result|failed
+
+- name: Remove temporary file
+  file:
+    path: /tmp/docker-install.sh
+    state: absent
+
+- name: Set Docker to auto-start
+  service: name=docker enabled=true state=started
+
+- name: Add docker_group_users to the docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+  become: yes
+  become_user: root
+  with_items: "{{ docker_group_users }}"
+
+#- name: Test if rompr is installed
+#  shell: docker ps -a -f name=rompr --format {%raw%}"table {{.Status}}"{%endraw%} | awk 'FNR == 2 {print}' | awk '{print $1}'
+#  register: status
+
+# - name: Install docker.py
+#   shell: pip install docker-py
+
+- name: Install docker-compose
+  shell: pip install docker-compose
+
+
+
+## Setup docker-mopidy dir
+
+- name: create dev dir
+  file:
+    path: ~/projects/audio/mopidy_proj
+    state: directory
+
+- name: create conf dir
+  file:
+    path: ~/.config/mopidy
+    state: directory
+
+## Copy Docker-compose.yml
+- name: Write Docke Compose
+  template:
+    src: docker-compose_yml.j2
+    dest: ~/docker-compose.yml
+
+- name: checkout bigbeet
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
+    dest: ~/projects/audio/mopidy_proj/mopidy-bigbeet
+
+- name: checkout beetslocal
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-beets-local.git'
+    dest: ~/projects/audio/mopidy_proj/mopidy-beetslocal
+
+- name: checkout docker-mopidy
+  git:
+    repo: 'https://github.com/rawdlite/docker-mopidy.git'
+    dest: ~/projects/audio/mopidy_proj/docker-mopidy
+    version: develop
+
+- name: Run Docker Compose using a project directory
+  docker_service:
+    project_src: /root/projects/audio/mopidy_proj
+    state: absent
+  register: output
+
+- name: Show debug
+  debug:
+    var: output
+  #
+  # assert:
+  #   that:
+  #     - "not web.flask_web_1.state.running"
+  #     - "not db.flask_db_1.state.running"
+
+# - name: Run with inline v2 compose
+#   docker_service:
+#     project_name: mopidy
+#     definition:
+#       version: '2'
+#       services:
+#         mopidy:
+#           build:
+#             context: "/root/projects/audio/mopidy_proj/docker-mopidy"
+#             dockerfile: Dockerfile.armhf
+#           container_name: mopidy3
+#           network_mode: host
+#           volumes:
+#             - '~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf'
+#             - '/data/music:/data/music'
+#           devices:
+#             - /dev/snd:/dev/snd
+#           restart: unless-stopped
+#         rompr:
+#           image: "rawdlite/rompr_armhf"
+#           container_name: rompr2
+#           ports:
+#             - '80:80'
+#           restart: unless-stopped
+#
+#     - debug:
+#         var: output
+#
+#     - assert:
+#         that:
+#           - "mopidy2.state.running"
+#           - "rompr2.state.running"

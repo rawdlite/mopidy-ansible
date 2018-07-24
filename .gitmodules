@@ -1,0 +1,3 @@
+[submodule "docker-mopidy"]
+	path = docker-mopidy
+	url = https://github.com/rawdlite/docker-mopidy

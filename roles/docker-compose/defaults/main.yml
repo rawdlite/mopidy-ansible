@@ -1,0 +1,14 @@
+---
+# defaults file for docker
+
+# List of users to add to docker group
+docker_group_users: []
+media_dir: /data/music
+spotify_user: False
+spotify_passwd: False
+spotify_client_id: False
+spotify_client_secret: False
+beetslibrary: ~/.config/mopidy/beetslibrary.blb
+bb_data_dir: ~/.local/share/mopidy/bigbeet
+audio_output: autoaudiosink
+audio_mixer: software

@@ -13,7 +13,7 @@ config_file =
 
 [audio]
 mixer = {{ audio_mixer}}
-mixer_volume = 68
+mixer_volume =
 output = {{ audio_output }}
 buffer_time =
 
@@ -34,6 +34,10 @@ enabled = true
 beetslibrary = {{ beetslibrary }}
 use_original_release_date = false
 
+[bigbeet]
+enabled = true
+beetslibrary = {{ beetslibrary }}
+bb_data_dir = {{ bb_data_dir }}
 
 [soundcloud]
 enabled = false  ; Extension disabled due to config errors.
@@ -71,7 +75,7 @@ party_mode = false  ; Config key not found.
 
 [alsamixer]
 enabled = true
-card = 1
+card = 0
 control = Master
 
 [mpd]
@@ -83,8 +87,6 @@ max_connections = 20
 connection_timeout = 60
 zeroconf = Mopidy MPD server on $hostname
 command_blacklist =
-  listall
-  listallinfo
 default_playlist_scheme = m3u
 
 [http]
@@ -119,13 +121,13 @@ enabled = true
 [file]
 enabled = true
 media_dirs =
-  /data/music|EXT_MUSIC
+  /data/music/music_data|EXT_MUSIC
 show_dotfiles = false
 follow_symlinks = false
 metadata_timeout = 1000
 
 [local]
-enabled = true
+enabled = false
 library = json
 media_dir =  /data/music
 scan_timeout = 1000

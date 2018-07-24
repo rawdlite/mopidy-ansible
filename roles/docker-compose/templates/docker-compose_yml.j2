@@ -1,0 +1,22 @@
+version: '2'
+services:
+  mopidy:
+    build:
+      context: "/root/projects/audio/mopidy_proj/docker-mopidy"
+      dockerfile: Dockerfile.armhf
+    container_name: mopidy
+    network_mode: host
+    volumes:
+      - '~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf'
+      - '{{ media_dir }}:/data/music'
+      - ~/.config/beets/config.yaml:/root/.config/beets/config.yaml
+      - /home/tom/projects/audio/mopidy_proj:/root/src
+    devices:
+      - /dev/snd:/dev/snd
+    restart: unless-stopped
+  rompr:
+    image: "rawdlite/rompr_armhf"
+    container_name: romp
+    ports:
+      - '80:80'
+    restart: unless-stopped

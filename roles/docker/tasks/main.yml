@@ -40,6 +40,9 @@
 - name: Install docker.py
   shell: pip install docker-py
 
+- name: Install docker-compose
+  shell: pip install docker-compose
+
 #  shell: docker run -d -p 80:80 --name rompr --restart unless-stopped rawdlite/rompr_armhf
 - name: start rompr docker
   docker_container:
