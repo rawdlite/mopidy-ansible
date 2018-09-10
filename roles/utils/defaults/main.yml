@@ -15,3 +15,4 @@ alias_functions:
   - alias dlog="docker logs --tail=500 mopidy"
   - alias bbb="docker exec -it mopidy /bin/bash"
   - alias beet="docker exec -it mopidy beet"
+  - alias mopidy="docker exec -it mopidy mopidy"

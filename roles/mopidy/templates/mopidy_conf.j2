@@ -3,6 +3,7 @@ cache_dir = $XDG_CACHE_DIR/mopidy
 config_dir = $XDG_CONFIG_DIR/mopidy
 data_dir = $XDG_DATA_DIR/mopidy
 max_tracklist_length = 10000
+restore_state = true
 
 [logging]
 color = true
@@ -30,10 +31,14 @@ title = Mopidy Mobile on $hostname
 ws_url =
 
 [beetslocal]
-enabled = true
+enabled = false
 beetslibrary = {{ beetslibrary }}
 use_original_release_date = false
 
+[bigbeet]
+enabled = true
+beetslibrary = {{ beetslibrary }}
+bb_data_dir = {{ bb_data_dir }}
 
 [soundcloud]
 enabled = false  ; Extension disabled due to config errors.
@@ -111,7 +116,7 @@ enabled = true
 base_dir =
 default_encoding = latin-1
 default_extension = .m3u8
-playlists_dir =
+playlists_dir = {{ playlists_dir }}
 
 [softwaremixer]
 enabled = true
@@ -126,7 +131,7 @@ metadata_timeout = 1000
 
 [local]
 enabled = true
-library = json
+library = sqlite
 media_dir =  /data/music
 scan_timeout = 1000
 scan_flush_threshold = 100

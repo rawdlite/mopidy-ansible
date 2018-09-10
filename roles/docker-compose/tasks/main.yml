@@ -14,6 +14,7 @@
 
 
 - name: Run install script
+  become: yes
   shell: /bin/sh /tmp/docker-install.sh
   when: result|failed
 
@@ -23,24 +24,19 @@
     state: absent
 
 - name: Set Docker to auto-start
+  become: yes
   service: name=docker enabled=true state=started
 
 - name: Add docker_group_users to the docker group
   user:
     name: "{{ item }}"
     groups: docker
+    append: yes
   become: yes
-  become_user: root
   with_items: "{{ docker_group_users }}"
 
-#- name: Test if rompr is installed
-#  shell: docker ps -a -f name=rompr --format {%raw%}"table {{.Status}}"{%endraw%} | awk 'FNR == 2 {print}' | awk '{print $1}'
-#  register: status
-
-# - name: Install docker.py
-#   shell: pip install docker-py
-
 - name: Install docker-compose
+  become: yes
   shell: pip install docker-compose
 
 
@@ -51,11 +47,13 @@
   file:
     path: ~/projects/audio/mopidy_proj
     state: directory
+  when: dev_install
 
 - name: create conf dir
   file:
     path: ~/.config/mopidy
     state: directory
+
 
 ## Copy Docker-compose.yml
 - name: Write Docke Compose
@@ -67,32 +65,34 @@
   git:
     repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
     dest: ~/projects/audio/mopidy_proj/mopidy-bigbeet
+  when: dev_install
 
 - name: checkout beetslocal
   git:
     repo: 'https://github.com/rawdlite/mopidy-beets-local.git'
     dest: ~/projects/audio/mopidy_proj/mopidy-beetslocal
+  when: dev_install
 
 - name: checkout docker-mopidy
   git:
     repo: 'https://github.com/rawdlite/docker-mopidy.git'
     dest: ~/projects/audio/mopidy_proj/docker-mopidy
     version: develop
+  when: dev_install
+
+- name: checkout docker-rompr
+  git:
+    repo: 'https://github.com/rawdlite/docker-rompr.git'
+    dest: ~/projects/audio/mopidy_proj/docker-rompr
+  when: dev_install
 
 - name: Run Docker Compose using a project directory
   docker_service:
     project_src: /root/projects/audio/mopidy_proj
     state: absent
   register: output
+  when: dev_install
 
-- name: Show debug
-  debug:
-    var: output
-  #
-  # assert:
-  #   that:
-  #     - "not web.flask_web_1.state.running"
-  #     - "not db.flask_db_1.state.running"
 
 # - name: Run with inline v2 compose
 #   docker_service:

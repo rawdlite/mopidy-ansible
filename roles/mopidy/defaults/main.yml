@@ -8,3 +8,5 @@ spotify_client_secret: False
 beetslibrary: ~/.config/mopidy/beetslibrary.blb
 audio_output: autoaudiosink
 audio_mixer: software
+playlists_dir: ~/.config/mopidy/playlists
+bb_data_dir: /data/music/music_var/bigbeet

@@ -1,22 +1,33 @@
-version: '2'
+version: "3"
 services:
   mopidy:
-    build:
-      context: "/root/projects/audio/mopidy_proj/docker-mopidy"
-      dockerfile: Dockerfile.armhf
+    image: diskstation:5555/rawdlite/mopidy:latest
     container_name: mopidy
-    network_mode: host
-    volumes:
-      - '~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf'
-      - '{{ media_dir }}:/data/music'
-      - ~/.config/beets/config.yaml:/root/.config/beets/config.yaml
-      - /home/tom/projects/audio/mopidy_proj:/root/src
     devices:
-      - /dev/snd:/dev/snd
-    restart: unless-stopped
-  rompr:
-    image: "rawdlite/rompr_armhf"
-    container_name: romp
+      - "/dev/snd"
     ports:
-      - '80:80'
-    restart: unless-stopped
+      - "6600:6600"
+      - "6680:6680"
+    restart: always
+    volumes:
+      - ~/.config/mopidy/mopidy-docker.conf:/root/.config/mopidy/mopidy.conf
+      - /data/audio:/data/audio
+      - /data/music/:/data/music/
+      - ~/.config/beets/:/root/.config/beets/
+      - ~/projects/audio:/root/src
+      - ~/.local/share/mopidy/bigbeet/:/root/.local/share/mopidy/bigbeet
+  mysql:
+    image: diskstation:5555/rawdlite/rompr_mysql:latest
+    restart: always
+    container_name: mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_ROMPR_PASS=R9nM773tYJtcLv
+    ports:
+      - "3306:3306"
+  rompr:
+    image: diskstation:5555/rawdlite/rompr_apache:latest
+    container_name: rompr
+    restart: always
+    ports:
+      - "80:80"

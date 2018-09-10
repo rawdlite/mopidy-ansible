@@ -31,7 +31,7 @@
  #     docker_group_users:
  #       - odroid
 #
-#    - role: mopidy
+    - role: mopidy
       media_dir: /data/music
       spotify_user: !vault |
           $ANSIBLE_VAULT;1.1;AES256
@@ -63,6 +63,7 @@
           3461383634343964370a303832326237666631316564666133393663313564366463373537613232
           32666362383963613966656436346630343833303338646532303438633761626130323463646138
           3338343236656635363838616466313530643630353332646264
-      beetslibrary: /data/music/beetslibrary.blb
+      beetslibrary: /data/music/music_var/beetslibrary.blb
+      playlists_dir: /data/music/music_var/playlists
       audio_output: alsasink device=hw:1,0
       audio_mixer: alsamixer

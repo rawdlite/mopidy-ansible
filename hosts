@@ -9,3 +9,6 @@ odroid.home.lan ansible_user=root
 
 [htpc]
 htpc.home.lan ansible_user=tom
+
+[raspian]
+192.168.1.87 ansible_user=pi

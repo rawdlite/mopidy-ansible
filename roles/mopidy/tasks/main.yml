@@ -10,6 +10,22 @@
     src: mopidy_conf.j2
     dest: ~/.config/mopidy/mopidy.conf
 
+- name: create data dir
+  file:
+    path: /data/music
+    state: directory
+    mode: 0755
+
+- name: create dev dir
+  file:
+    path: ~/.config/beets
+    state: directory
+    mode: 0755
+
+# fdisk entry
+# LABEL=EXT_MUSIC /data/music     vfat   defaults,rw,owner,flush,umask=000 0 0
+
+# ln -s /data/music/music_var/beet-config/config.yaml .
 ### handled by docker-compose
 
 # docker run -d  --name mopidy --net host --device /dev/snd -v ~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf -v /data/music:/data/music rawdlite/mopidy_armhf

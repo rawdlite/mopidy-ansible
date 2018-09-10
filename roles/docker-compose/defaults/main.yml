@@ -1,8 +1,8 @@
 ---
 # defaults file for docker
-
+dev_install: False
 # List of users to add to docker group
-docker_group_users: []
+docker_group_users: [pi]
 media_dir: /data/music
 spotify_user: False
 spotify_passwd: False

@@ -1,0 +1,35 @@
+- name: set locale en_US.UTF-8
+  locale_gen:
+    name: en_US.UTF-8
+    state: present
+  become: yes
+
+- name: set pi password
+  become: yes
+  user:
+    name: pi
+    update_password: always
+    password: "{{ lookup('password', 'credentials/root/password length=15') }}"
+    groups: audio
+    append: yes
+
+- name: set root password
+  become: yes
+  user:
+    name: root
+    update_password: always
+    password: "{{ lookup('password', 'credentials/root/password length=15') }}"
+
+- name: create data dir
+  become: yes
+  file:
+    path: /data/music
+    state: directory
+    mode: 0755
+
+- name: Install Packages
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ tools }}"

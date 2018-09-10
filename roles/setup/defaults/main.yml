@@ -1,0 +1,12 @@
+---
+user: tom
+tools:
+  - nfs-kernel-server
+  - build-essential
+  - git
+  - samba
+  - samba-common-bin
+  - python-glade2
+  - mp3val
+  - flac
+  - python-pip

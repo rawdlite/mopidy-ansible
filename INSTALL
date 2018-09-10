@@ -1,4 +1,6 @@
 # activate virtula Environment
 workon ansible_scripts
+# copy key
+ssh-copy-id odroid
 # run playbook
 ansible-playbook -i hosts --vault-id ~/CloudStation/keys/ansible_passwd odroid_headless.yml
