@@ -20,16 +20,23 @@
     update_password: always
     password: "{{ lookup('password', 'credentials/root/password length=15') }}"
 
-- name: create data dir
-  become: yes
-  file:
-    path: /data/music
-    state: directory
-    mode: 0755
-
 - name: Install Packages
   become: yes
   apt:
     name: "{{ item }}"
     state: present
   with_items: "{{ tools }}"
+
+- name: Create alias functions
+  lineinfile:
+    path: ~/.bashrc
+    line: "{{ item }}"
+    state: present
+  with_items: "{{ alias_functions }}"
+
+- name: nfs config
+  become: yes
+  lineinfile:
+    path: /etc/auto.master
+    regexp: '^#/net'
+    line: '/net    -host'

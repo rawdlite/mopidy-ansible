@@ -40,14 +40,10 @@
   shell: pip install docker-compose
 
 
-
-## Setup docker-mopidy dir
-
-- name: create dev dir
+- name: create audio project dir
   file:
-    path: ~/projects/audio/mopidy_proj
+    path: ~/projects/audio
     state: directory
-  when: dev_install
 
 - name: create conf dir
   file:
@@ -56,7 +52,7 @@
 
 
 ## Copy Docker-compose.yml
-- name: Write Docke Compose
+- name: Write Docker Compose
   template:
     src: docker-compose_yml.j2
     dest: ~/docker-compose.yml
@@ -64,8 +60,7 @@
 - name: checkout bigbeet
   git:
     repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
-    dest: ~/projects/audio/mopidy_proj/mopidy-bigbeet
-  when: dev_install
+    dest: ~/projects/audio/mopidy-bigbeet
 
 - name: checkout beetslocal
   git:
@@ -86,43 +81,12 @@
     dest: ~/projects/audio/mopidy_proj/docker-rompr
   when: dev_install
 
-- name: Run Docker Compose using a project directory
+- name: start docker container
   docker_service:
-    project_src: /root/projects/audio/mopidy_proj
-    state: absent
-  register: output
-  when: dev_install
+    project_src: ~/
+    project_name: music_server
+    state: present
 
-
-# - name: Run with inline v2 compose
-#   docker_service:
-#     project_name: mopidy
-#     definition:
-#       version: '2'
-#       services:
-#         mopidy:
-#           build:
-#             context: "/root/projects/audio/mopidy_proj/docker-mopidy"
-#             dockerfile: Dockerfile.armhf
-#           container_name: mopidy3
-#           network_mode: host
-#           volumes:
-#             - '~/.config/mopidy/mopidy.conf:/root/.config/mopidy/mopidy.conf'
-#             - '/data/music:/data/music'
-#           devices:
-#             - /dev/snd:/dev/snd
-#           restart: unless-stopped
-#         rompr:
-#           image: "rawdlite/rompr_armhf"
-#           container_name: rompr2
-#           ports:
-#             - '80:80'
-#           restart: unless-stopped
-#
-#     - debug:
-#         var: output
-#
-#     - assert:
-#         that:
-#           - "mopidy2.state.running"
-#           - "rompr2.state.running"
+- name: register bigbeet
+  command: docker exec -it mopidy pip install --editable /root/src/mopidy-bigbeet
+  register: bigbeet

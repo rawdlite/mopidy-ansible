@@ -1,5 +1,4 @@
 ---
-user: tom
 tools:
   - nfs-kernel-server
   - build-essential
@@ -10,3 +9,24 @@ tools:
   - mp3val
   - flac
   - python-pip
+  - vim
+  - tmux
+    #- mplayer
+  - python-pip
+  - ncmpcpp
+  - mpc
+  - python-openssl
+  - libffi-dev
+  - rpcbind
+  - nfs-common
+  - autofs
+
+alias_functions:
+  - d-enter() { docker exec -it "$1" /bin/bash; }
+  - d-log() { docker logs "$1"; }
+  - alias dmop="docker exec -it mopidy"
+  - alias dlog="docker logs --tail=500 mopidy"
+  - alias bbb="docker exec -it mopidy /bin/bash"
+  - alias beet="docker exec -it mopidy beet"
+  - alias mysql="docker exec -it mysql mysql"
+  - alias mopidy="docker exec -it mopidy mopidy"

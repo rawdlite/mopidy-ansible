@@ -9,7 +9,7 @@
     with_items: ['snd-soc-pcm5102', 'snd-soc-odroid-dac' ]
   - name: Default Sound Device
     copy:
-      src: roles/utils/files/asound.conf
+      src: roles/audio-cirrus/files/asound.conf
       dest: /etc/asound.conf
 
   roles:

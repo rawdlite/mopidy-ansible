@@ -45,8 +45,8 @@ format_album: "$albumartist - $album \n$genre comp: $comp albumtype: $albumtype 
 
 lastgenre:
     auto: no
-    canonical: /data/music/music_var/bigbeet/genres-tree.yaml
-    whitelist: /data/music/music_var/bigbeet//genres.txt
+    canonical: /root/src/mopidy-bigbeet/mopidy_bigbeet/schema/genres-tree.yaml
+    whitelist: /root/src/mopidy-bigbeet/mopidy_bigbeet/schema/genres.txt
     force: no
     source: artist
 paths:

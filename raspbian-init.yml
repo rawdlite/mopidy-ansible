@@ -3,13 +3,8 @@
     - dev_install: False
   roles:
     - setup
-    - docker-compose
-
-### cirrus soundcard
-# sudo rpi-update
-# echo "dtoverlay=rpi-cirrus-wm5102" >> /boot/config.txt
-# echo "softdep arizona-spi pre: arizona-ldo1" >  /etc/modprobe.d/cirrus.conf
-# wget http://www.horus.com/~hias/tmp/cirrus/cirrus-ng-scripts.tgz
-# mkdir bin
-# cd bin
-# tar zxf ../cirrus-ng-scripts.tgz
+    - audio-cirrus
+    - mopidy
+    - role: docker-compose
+      docker_group_users:
+        - pi

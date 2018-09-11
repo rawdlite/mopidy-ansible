@@ -10,12 +10,9 @@ services:
       - "6680:6680"
     restart: always
     volumes:
-      - ~/.config/mopidy/mopidy-docker.conf:/root/.config/mopidy/mopidy.conf
-      - /data/audio:/data/audio
+      - ~/.config/:/root/.config/
       - /data/music/:/data/music/
-      - ~/.config/beets/:/root/.config/beets/
       - ~/projects/audio:/root/src
-      - ~/.local/share/mopidy/bigbeet/:/root/.local/share/mopidy/bigbeet
   mysql:
     image: diskstation:5555/rawdlite/rompr_mysql:latest
     restart: always

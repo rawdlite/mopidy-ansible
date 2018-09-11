@@ -1,0 +1,55 @@
+---
+### cirrus soundcard
+# sudo rpi-update
+# echo "dtoverlay=rpi-cirrus-wm5102" >> /boot/config.txt
+# echo "softdep arizona-spi pre: arizona-ldo1" >  /etc/modprobe.d/cirrus.conf
+# wget http://www.horus.com/~hias/tmp/cirrus/cirrus-ng-scripts.tgz
+# mkdir bin
+# cd bin
+# tar zxf ../cirrus-ng-scripts.tgz
+- name: rpi-update
+  become: yes
+  command: rpi-update
+
+- name: create cirrus.conf
+  become: yes
+  lineinfile:
+    path: /etc/modprobe.d/cirrus.conf
+    line: 'softdep arizona-spi pre: arizona-ldo1'
+    state: present
+    create: yes
+
+- name: Extract cirrus scripts
+  become: yes
+  unarchive:
+    src: http://www.horus.com/~hias/tmp/cirrus/cirrus-ng-scripts.tgz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: create boot entry
+  become: yes
+  lineinfile:
+    path: /boot/config.txt
+    line: 'dtoverlay=rpi-cirrus-wm5102'
+    state: present
+  register: task_result
+
+- name: Reboot immediately if there was a change.
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+  when: task_result is changed
+
+- name: Wait for the reboot to complete if there was a change.
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
+  when: task_result is changed
+
+- name: Set Default Sound Device
+  become: yes
+  copy:
+    src: asound_cirrus.conf
+    dest: /etc/asound.conf
