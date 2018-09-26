@@ -1,3 +1,9 @@
+server string = %h server (Samba, Ubuntu)
+dns proxy = no
+log file = /var/log/samba/log.%m
+max log size = 1000
+syslog = 0
+server role = standalone server
 workgroup = mopi_group
 wins support = yes
 
@@ -9,12 +15,11 @@ wins support = yes
    only guest=no
    public=no
 
-[dev_dir]
-   comment= Dev Dir
-   path=/home/tom/projects
-   browseable=Yes
+[homes]
+   comment = Home Directories
+   browseable = yes
    writeable=Yes
    only guest=no
-   create mask=0777
-   directory mask=0777
+   create mask=0655
+   directory mask=0755
    public=no

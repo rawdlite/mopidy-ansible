@@ -1,7 +1,7 @@
 [core]
-cache_dir = $XDG_CACHE_DIR/mopidy
-config_dir = $XDG_CONFIG_DIR/mopidy
-data_dir = $XDG_DATA_DIR/mopidy
+cache_dir = /data/music/music_var/mopidy
+config_dir = /data/music/music_var/mopidy
+data_dir = /data/music/music_var/mopidy
 max_tracklist_length = 10000
 restore_state = true
 
@@ -13,9 +13,9 @@ debug_file = mopidy.log
 config_file =
 
 [audio]
-mixer = {{ audio_mixer}}
+mixer = {{ lookup('env','AUDIO_MIXER') }}
 mixer_volume = 68
-output = {{ audio_output }}
+output = {{ lookup('env','AUDIO_OUTPUT') }}
 buffer_time =
 
 [proxy]
@@ -32,30 +32,30 @@ ws_url =
 
 [beetslocal]
 enabled = false
-beetslibrary = {{ beetslibrary }}
+beetslibrary = {{ lookup('env','BEETSLIBRARY') }}
 use_original_release_date = false
 
 [bigbeet]
 enabled = true
-beetslibrary = {{ beetslibrary }}
-bb_data_dir = {{ bb_data_dir }}
+beetslibrary = {{ lookup('env','BEETSLIBRARY') }}
+bb_data_dir = {{ lookup('env','BB_DATA_DIR') }}
 
 [soundcloud]
-enabled = false  ; Extension disabled due to config errors.
+enabled = true
 explore_songs = 25
-auth_token =   ; Must be set.
+auth_token =  {{ lookup('env','SOUNDCLOUD_AUTH_TOKEN') }}
 
 [somafm]
 enabled = true
 encoding = mp3
-quality = fast
+quality = highest
 
 [spotify]
 enabled = true
-username =  {{ spotify_user }}
-password =  {{ spotify_passwd }}
-client_id = {{ spotify_client_id }}
-client_secret = {{ spotify_client_secret }}
+username =  {{ lookup('env','SPOTIFY_USERNAME') }}
+password =  {{ lookup('env','SPOTIFY_PASSWORD') }}
+client_id = {{ lookup('env','SPOTIFY_CLIENT_ID') }}
+client_secret = {{ lookup('env','SPOTIFY_CLIENT_SECRET') }}
 bitrate = 320
 volume_normalization = true
 private_session = false
@@ -68,11 +68,19 @@ search_artist_count = 10
 search_track_count = 50
 toplist_countries =
 
+
+[gmusic]
+username = {{ lookup('env','G_MUSIC_USERNAME') }}
+password = {{ lookup('env','G_MUSIC_PASSWORD') }}
+deviceid = {{ lookup('env','G_MUSIC_DEVICEID') }}
+bitrate = 320
+radio_stations_in_browse = true
+
 [yamaha]
-enabled = false
-host =   ; Config key not found.
-source =   ; Config key not found.
-party_mode = false  ; Config key not found.
+enabled = true
+host = {{ lookup('env','YAMAHA_HOST') }}
+source = {{ lookup('env','YAMAHA_SOURCE') }}
+party_mode = false
 
 [alsamixer]
 enabled = true
@@ -116,7 +124,7 @@ enabled = true
 base_dir =
 default_encoding = latin-1
 default_extension = .m3u8
-playlists_dir = {{ playlists_dir }}
+playlists_dir = {{ lookup('env','PLAYLIST_DIR') }}
 
 [softwaremixer]
 enabled = true

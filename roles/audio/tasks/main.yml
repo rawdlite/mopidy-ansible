@@ -1,0 +1,16 @@
+---
+### cirrus soundcard
+# sudo rpi-update
+# echo "dtoverlay=rpi-cirrus-wm5102" >> /boot/config.txt
+# echo "softdep arizona-spi pre: arizona-ldo1" >  /etc/modprobe.d/cirrus.conf
+# wget http://www.horus.com/~hias/tmp/cirrus/cirrus-ng-scripts.tgz
+# mkdir bin
+# cd bin
+# tar zxf ../cirrus-ng-scripts.tgz
+- name: setup cirrus
+  include_tasks: cirrus.yml
+  when: audio_card == 'cirrus'
+
+- name: setup hifishield 2
+  include_tasks: hifishield2.yml
+  when: audio_card == 'hifishield2'

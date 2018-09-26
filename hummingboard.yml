@@ -1,13 +1,11 @@
-- hosts: raspian
+- hosts: hummingboard
   vars:
     - dev_install: False
   roles:
     - setup
     - role: audio
-      audio_card: 'cirrus'
+      audio_card: 'None'
     - mopidy
-    - role: docker-compose
-      docker_group_users:
-        - pi
+    - docker-compose
     - role: dev_env
       when: dev_install

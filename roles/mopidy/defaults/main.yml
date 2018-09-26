@@ -1,11 +1,12 @@
 ---
+dev_install: False
 # defaults file for mopidy
-media_dir: /media
+media_dir: /data/music
 spotify_user: False
 spotify_passwd: False
 spotify_client_id: False
 spotify_client_secret: False
-beetslibrary: ~/.config/mopidy/beetslibrary.blb
+beetslibrary: /data/music/music_var/bigbeet/beetslibrary.blb
 audio_output: autoaudiosink
 audio_mixer: software
 playlists_dir: ~/.config/mopidy/playlists

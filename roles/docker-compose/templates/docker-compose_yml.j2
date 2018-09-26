@@ -1,7 +1,7 @@
 version: "3"
 services:
   mopidy:
-    image: diskstation:5555/rawdlite/mopidy:latest
+    image: diskstation:5555/rawdlite/mopidy_arm32v7:latest
     container_name: mopidy
     devices:
       - "/dev/snd"
@@ -14,7 +14,7 @@ services:
       - /data/music/:/data/music/
       - ~/projects/audio:/root/src
   mysql:
-    image: diskstation:5555/rawdlite/rompr_mysql:latest
+    image: diskstation:5555/rawdlite/rompr_mysql_arm32v7:latest
     restart: always
     container_name: mysql
     environment:
@@ -23,7 +23,7 @@ services:
     ports:
       - "3306:3306"
   rompr:
-    image: diskstation:5555/rawdlite/rompr_apache:latest
+    image: diskstation:5555/rawdlite/rompr_apache_arm32v7:latest
     container_name: rompr
     restart: always
     ports:

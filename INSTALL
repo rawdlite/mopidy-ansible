@@ -2,5 +2,7 @@
 workon ansible_scripts
 # copy key
 ssh-copy-id odroid
+# set variables
+source ../set_env.sh
 # run playbook
-ansible-playbook -i hosts --vault-id ~/CloudStation/keys/ansible_passwd odroid_headless.yml
+ansible-playbook -i hosts  odroid_headless.yml

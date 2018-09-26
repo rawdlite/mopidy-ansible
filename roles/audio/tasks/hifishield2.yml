@@ -1,0 +1,17 @@
+- name: Install alsa Packages
+  become: yes
+  apt:
+    name: alsa-base
+    state: present
+
+- name: Set Default Sound Device
+  become: yes
+  copy:
+    src: odroid_rc_local
+    dest: /etc/rc.local
+
+- name: Set Default Sound Device
+  become: yes
+  copy:
+    src: asound_odroid.conf
+    dest: /etc/asound.conf

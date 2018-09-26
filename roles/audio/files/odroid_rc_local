@@ -1,0 +1,15 @@
+if [ -f /aafirstboot ]; then /aafirstboot start ; fi
+
+echo Loading HiFi-Shield2 module
+modprobe aml_i2c
+modprobe snd-soc-pcm512x
+modprobe snd-soc-pcm512x-i2c
+echo pcm5242 0x4c > /sys/class/i2c-adapter/i2c-1/new_device
+modprobe snd-soc-odroid-dac2
+
+amixer -c 1 sset Analogue 0
+amixer -c 1 sset Digital 201
+amixer -c 1 sset Deemphasis on
+echo Done.
+
+exit 0

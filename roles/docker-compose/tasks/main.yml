@@ -23,32 +23,22 @@
     path: /tmp/docker-install.sh
     state: absent
 
-- name: Set Docker to auto-start
-  become: yes
-  service: name=docker enabled=true state=started
-
 - name: Add docker_group_users to the docker group
   user:
     name: "{{ item }}"
     groups: docker
     append: yes
   become: yes
-  with_items: "{{ docker_group_users }}"
+  with_items: "{{ ansible_user }}"
+  when: ansible_user != 'root'
+
+- name: Set Docker to auto-start
+  become: yes
+  service: name=docker enabled=true state=started
 
 - name: Install docker-compose
   become: yes
   shell: pip install docker-compose
-
-
-- name: create audio project dir
-  file:
-    path: ~/projects/audio
-    state: directory
-
-- name: create conf dir
-  file:
-    path: ~/.config/mopidy
-    state: directory
 
 
 ## Copy Docker-compose.yml
@@ -57,36 +47,12 @@
     src: docker-compose_yml.j2
     dest: ~/docker-compose.yml
 
-- name: checkout bigbeet
-  git:
-    repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
-    dest: ~/projects/audio/mopidy-bigbeet
+# Broken in ansible
+# - name: start docker container
+#   docker_service:
+#     project_src: ~/
+#     project_name: music_server
+#     state: present
 
-- name: checkout beetslocal
-  git:
-    repo: 'https://github.com/rawdlite/mopidy-beets-local.git'
-    dest: ~/projects/audio/mopidy_proj/mopidy-beetslocal
-  when: dev_install
-
-- name: checkout docker-mopidy
-  git:
-    repo: 'https://github.com/rawdlite/docker-mopidy.git'
-    dest: ~/projects/audio/mopidy_proj/docker-mopidy
-    version: develop
-  when: dev_install
-
-- name: checkout docker-rompr
-  git:
-    repo: 'https://github.com/rawdlite/docker-rompr.git'
-    dest: ~/projects/audio/mopidy_proj/docker-rompr
-  when: dev_install
-
-- name: start docker container
-  docker_service:
-    project_src: ~/
-    project_name: music_server
-    state: present
-
-- name: register bigbeet
-  command: docker exec -it mopidy pip install --editable /root/src/mopidy-bigbeet
-  register: bigbeet
+- name: Start container
+  shell: "docker-compose up -d"

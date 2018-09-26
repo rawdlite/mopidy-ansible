@@ -1,56 +1,11 @@
 ---
-# tasks file for dev_env
-- user:
-    name: tom
-    comment: "nfs user"
-    uid: 501
-    shell: /bin/bash
-    group: users
-    groups: audio
-    state: present
 
-- user:
-    name: pi
-    remove: yes
-    state: absent
-
-- name: sudo for tom
-  lineinfile:
-    path: /etc/sudoers
-    line: 'tom   ALL=(ALL) NOPASSWD:ALL'
-    regexp: '^tom'
-    create: yes
-    state: present
-
-- name: create ssh dir
-  file:
-    path: /home/tom/.ssh
-    state: directory
-    owner: tom
-    group: users
-    mode: 0700
-
-- name: create ssh authorization
-  copy:
-    src: ~/.ssh/id_rsa.pub
-    dest: /home/tom/.ssh/authorized_keys
-    owner: tom
-    group: users
-    mode: 0700
-
-
-- name: create data dir
-  file:
-    path: /data/music
-    state: directory
-    mode: 0755
-
-- name: Mount up device EXT_MUSIC
-  mount:
-    path: /data/music
-    src: LABEL=EXT_MUSIC
-    fstype: vfat
-    state: present
+# - name: Mount up device EXT_MUSIC
+#   mount:
+#     path: /data/music
+#     src: LABEL=EXT_MUSIC
+#     fstype: vfat
+#     state: present
 
 - name: Install Dev Packages
   become: yes
@@ -65,5 +20,32 @@
     dest: /etc/samba/smb.conf
 
 - name: set smb_passwd
-  command: (echo {{ smb_passwd }}; echo {{ smb_passwd }}) |  smbpasswd -s -a tom
+  become: yes
+  command: (echo {{ lookup('password', 'credentials/{{ ansible_user }}/password length=15') }}; echo {{ lookup('password', 'credentials/{{ ansible_user }}/password length=15') }}) |  smbpasswd -s -a {{ ansible_user }}
   register: smb_passwd
+  when: ansible_user != 'root'
+
+# - name: set smb_passwd
+#   command: "(echo {{ lookup('password', 'credentials/root/password length=15') }} ; echo {{ lookup('password', 'credentials/root/password length=15') }}) |  smbpasswd -s -a"
+#   register: smb_passwd
+#   when: ansible_user == 'root'
+
+- name: checkout bigbeet
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-bigbeet.git'
+    dest: ~/projects/audio/mopidy-bigbeet
+
+- name: checkout beetslocal
+  git:
+    repo: 'https://github.com/rawdlite/mopidy-beets-local.git'
+    dest: ~/projects/audio/mopidy_proj/mopidy-beetslocal
+
+- name: register bigbeet
+  command: docker exec -i mopidy pip install --editable /root/src/mopidy-bigbeet
+  register: bigbeet
+
+- name: link beet config
+  file:
+    src: "~/projects/audio/mopidy-bigbeet/mopidy_bigbeet/schema/config.yaml"
+    dest: "~/.config/beets/config.yaml"
+    state: link

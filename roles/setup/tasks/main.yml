@@ -4,14 +4,15 @@
     state: present
   become: yes
 
-- name: set pi password
+- name: set user password
   become: yes
   user:
-    name: pi
+    name: {{ ansible_user }}
     update_password: always
-    password: "{{ lookup('password', 'credentials/root/password length=15') }}"
+    password: "{{ lookup('password', 'credentials/{{ ansible_user }}/password length=15') }}"
     groups: audio
     append: yes
+  when: ansible_user != 'root'
 
 - name: set root password
   become: yes
@@ -38,5 +39,12 @@
   become: yes
   lineinfile:
     path: /etc/auto.master
-    regexp: '^#/net'
-    line: '/net    -host'
+    line: '/data   /etc/auto.data'
+    state: present
+
+- name: nfs config data
+  become: yes
+  lineinfile:
+    path: /etc/auto.data
+    line: 'music   diskstation:/volume1/music_store'
+    state: present

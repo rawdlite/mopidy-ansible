@@ -11,6 +11,7 @@
     dest: ~/.config/mopidy/mopidy.conf
 
 - name: create data dir
+  become: yes
   file:
     path: /data
     state: directory
@@ -22,12 +23,19 @@
     state: directory
     mode: 0755
 
-- name: create net dir
+# - name: create net dir
+#   become: yes
+#   file:
+#     path: /net
+#     state: directory
+#     mode: 0755
+
+- name: Create host entry
   become: yes
-  file:
-    path: /net
-    state: directory
-    mode: 0755
+  lineinfile:
+    path: /etc/hosts
+    line: "192.168.1.4 diskstation"
+    state: present
 
 - name: Restart service autofs
   become: yes
@@ -35,16 +43,18 @@
     name: autofs
     state: restarted
 
-- name: setup data dir
-  become: yes
-  file:
-    src: /net/diskstation/volume1/music_store
-    dest: /data/music
-    state: link
+# - name: setup data dir
+#   become: yes
+#   file:
+#     src: /net/diskstation/volume1/music_store
+#     dest: /data/music
+#     state: link
 
 # fdisk entry
 # LABEL=EXT_MUSIC /data/music     vfat   defaults,rw,owner,flush,umask=000 0 0
-
-
-
-# ln -s /data/music/music_var/beet-config/config.yaml .
+# - name: Mount up device EXT_MUSIC
+#   mount:
+#     path: /data/music
+#     src: LABEL=EXT_MUSIC
+#     fstype: vfat
+#     state: present
