@@ -13,3 +13,5 @@ export SPOTIFY_CLIENT_ID=
 export SPOTIFY_CLIENT_SECRET=
 export YAMAHA_HOST=192.168.1.10
 export YAMAHA_SOURCE=AV3
+export HD_LABEL=EXT_MUSIC
+export NFS_MOUNT=diskatation:/volume1/music_store
