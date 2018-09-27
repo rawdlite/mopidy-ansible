@@ -1,6 +1,8 @@
 - hosts: hummingboard
   vars:
     - dev_install: False
+    - nfs_mount: True
+  # - hd_mount: True 
   roles:
     - setup
     - role: audio

@@ -1,6 +1,8 @@
 - hosts: odroid
   vars:
     - dev_install: True
+    - nfs_mount: True
+  # - hd_mount: True  
   roles:
     - setup
     - role: audio

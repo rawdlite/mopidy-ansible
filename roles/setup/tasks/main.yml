@@ -41,10 +41,22 @@
     path: /etc/auto.master
     line: '/data   /etc/auto.data'
     state: present
+  when: nfs_mount
 
 - name: nfs config data
   become: yes
   lineinfile:
     path: /etc/auto.data
-    line: 'music   diskstation:/volume1/music_store'
+    line: "music   {{ lookup('env','NFS_MOUNT') }}"
     state: present
+  when: nfs_mount
+
+# fdisk entry
+# LABEL=EXT_MUSIC /data/music     vfat   defaults,rw,owner,flush,umask=000 0 0
+- name: Mount up device {{ lookup('env','HD_LABEL') }}
+  mount:
+    path: /data/music
+    src: LABEL={{ lookup('env','HD_LABEL') }}
+    fstype: vfat
+    state: present
+  when: hd_mount
