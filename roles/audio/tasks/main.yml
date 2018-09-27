@@ -14,3 +14,7 @@
 - name: setup hifishield 2
   include_tasks: hifishield2.yml
   when: audio_card == 'hifishield2'
+
+- name: setup hifishield plus
+  include_tasks: hifishieldplus.yml
+  when: audio_card == 'hifishieldplus'

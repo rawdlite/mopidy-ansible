@@ -10,13 +10,13 @@
     url: https://get.docker.com
     dest: /tmp/docker-install.sh
     mode: "a+x"
-  when: result|failed
+  when: result is failed
 
 
 - name: Run install script
   become: yes
   shell: /bin/sh /tmp/docker-install.sh
-  when: result|failed
+  when: result is failed
 
 - name: Remove temporary file
   file:
