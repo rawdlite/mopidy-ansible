@@ -7,7 +7,7 @@
 - name: set user password
   become: yes
   user:
-    name: {{ ansible_user }}
+    name: "{{ ansible_user }}"
     update_password: always
     password: "{{ lookup('password', 'credentials/{{ ansible_user }}/password length=15') }}"
     groups: audio
@@ -35,6 +35,36 @@
     state: present
   with_items: "{{ alias_functions }}"
 
+- name: create data dir
+  become: yes
+  file:
+    path: /data
+    state: directory
+    mode: 0755
+
+# - name: create net dir
+#   become: yes
+#   file:
+#     path: /net
+#     state: directory
+#     mode: 0755
+
+# - name: setup data dir
+#   become: yes
+#   file:
+#     src: /net/diskstation/volume1/music_store
+#     dest: /data/music
+#     state: link
+
+# fdisk entry
+# LABEL=EXT_MUSIC /data/music     vfat   defaults,rw,owner,flush,umask=000 0 0
+# - name: Mount up device EXT_MUSIC
+#   mount:
+#     path: /data/music
+#     src: LABEL=EXT_MUSIC
+#     fstype: vfat
+#     state: present
+
 - name: nfs config
   become: yes
   lineinfile:
@@ -42,9 +72,9 @@
     line: '/data   /etc/auto.data'
     state: present
 
-- name: nfs config data
+- name: create /etc/auto.data
   become: yes
-  lineinfile:
-    path: /etc/auto.data
-    line: 'music   diskstation:/volume1/music_store'
-    state: present
+  copy:
+    dest: "/etc/auto.data"
+    content: 'music   diskstation:/volume1/music_store'
+

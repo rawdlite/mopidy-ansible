@@ -10,12 +10,6 @@
     src: mopidy_conf.j2
     dest: ~/.config/mopidy/mopidy.conf
 
-- name: create data dir
-  become: yes
-  file:
-    path: /data
-    state: directory
-    mode: 0755
 
 - name: create beets config dir
   file:
@@ -23,12 +17,6 @@
     state: directory
     mode: 0755
 
-# - name: create net dir
-#   become: yes
-#   file:
-#     path: /net
-#     state: directory
-#     mode: 0755
 
 - name: Create host entry
   become: yes
@@ -43,18 +31,3 @@
     name: autofs
     state: restarted
 
-# - name: setup data dir
-#   become: yes
-#   file:
-#     src: /net/diskstation/volume1/music_store
-#     dest: /data/music
-#     state: link
-
-# fdisk entry
-# LABEL=EXT_MUSIC /data/music     vfat   defaults,rw,owner,flush,umask=000 0 0
-# - name: Mount up device EXT_MUSIC
-#   mount:
-#     path: /data/music
-#     src: LABEL=EXT_MUSIC
-#     fstype: vfat
-#     state: present

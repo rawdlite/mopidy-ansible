@@ -1,0 +1,5 @@
+- name: Add the soc modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items: ['snd-soc-pcm5102', 'snd-soc-odroid-dac']

@@ -4,7 +4,8 @@
   roles:
     - setup
     - role: audio
-      audio_card: 'hifishield2'
+  #    audio_card: 'hifishield2'
+      audio_card: 'hifishieldplus'
     - mopidy
     - role: docker-compose
     - role: dev_env
